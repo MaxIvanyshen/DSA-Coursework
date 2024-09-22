@@ -1,56 +1,16 @@
-import { Queue } from "queue-typescript";
 import React, { useRef, useState, useEffect, MouseEvent } from "react";
-import { generateTree } from "./models/BinaryTree";
-import { TreeNode } from "./models/TreeNode";
+import { TreeProps } from "./models/BinaryTree";
 
-function calculateNodePositions(root: TreeNode | undefined, startX: number, levelY: number, levelGapY: number, minGapX: number): number {
-    if (!root) return startX;
 
-    // Calculate the position for the left and right children recursively
-    const leftX = calculateNodePositions(root.left, startX, levelY + levelGapY, levelGapY, minGapX);
-    const rightX = calculateNodePositions(root.right, leftX + minGapX, levelY + levelGapY, levelGapY, minGapX);
-
-    // Set the current node's position (mid-point between the left and right children)
-    const currentX = (leftX + rightX) / 2;
-    root.position = { x: currentX, y: levelY };
-
-    return rightX;
-}
-
-function convert(head: TreeNode): TreeNode[] {
-    const nodes: TreeNode[] = [];
-    
-    // Initialize starting coordinates and gaps
-    const rootX = 600;  // Start the root roughly in the middle of the canvas
-    const levelY = 100; // Start the root at this vertical position
-    const levelGapY = 100; // Vertical gap between levels
-    const minGapX = 50; // Minimum horizontal gap between sibling nodes
-
-    // Call the recursive function to calculate positions for all nodes
-    calculateNodePositions(head, rootX, levelY, levelGapY, minGapX);
-
-    // Collect nodes using level-order traversal (to return them in order)
-    const q = new Queue<TreeNode>();
-    q.enqueue(head);
-    while (q.length != 0) {
-        const curr = q.dequeue();
-        nodes.push(curr);
-        if (curr.left) q.enqueue(curr.left);
-        if (curr.right) q.enqueue(curr.right);
-    }
-    return nodes;
-}
-
-const Canvas: React.FC = () => {
+const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [draggingCircle, setDraggingCircle] = useState<number | null>(null); // Track which circle is being dragged
-  const head = generateTree();
-  const [nodes, setNodes] = useState<TreeNode[]>(convert(head));
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [scale, setScale] = useState<number>(1); // Scale factor
 
   useEffect(() => {
+      console.log("rendering");
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -66,7 +26,7 @@ const Canvas: React.FC = () => {
       ctx.scale(scale, scale); // Apply scale factor
 
       // Draw the circles
-      nodes.forEach((node) => {
+      treeNodes.forEach((node) => {
         if(node.right) {
             ctx.beginPath();
             ctx.moveTo(node.position.x, node.position.y)
@@ -85,7 +45,7 @@ const Canvas: React.FC = () => {
         }
 
       });
-      nodes.forEach((node) => {
+      treeNodes.forEach((node) => {
           ctx.beginPath();
           ctx.arc(node.position.x, node.position.y, 20, 0, 2 * Math.PI);
           ctx.fillStyle = "white";
@@ -101,7 +61,7 @@ const Canvas: React.FC = () => {
     };
 
     draw();
-  }, [nodes, scale]); // Re-render whenever positions or scale changes
+  }, [treeNodes, scale]); // Re-render whenever positions or scale changesp
 
   // Handle mouse down event to start dragging a circle
   const handleMouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
@@ -113,8 +73,8 @@ const Canvas: React.FC = () => {
     const mouseY = (e.clientY - rect.top) / scale;  // Adjust for scaling
 
     // Check if the click is inside any of the circles
-    for (let i = 0; i < nodes.length; i++) {
-      const { x, y } = nodes[i].position;
+    for (let i = 0; i < treeNodes.length; i++) {
+      const { x, y } = treeNodes[i].position;
       const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
       if (distance < 20) {
         setIsDragging(true);
@@ -137,13 +97,13 @@ const Canvas: React.FC = () => {
 
       // Update the position of the dragged circle
         let newNodes = [];
-        for(let i = 0; i < nodes.length; i++) {
+        for(let i = 0; i < treeNodes.length; i++) {
             if(draggingCircle == i) {
-                nodes[i].position = { x: mouseX - offset.x, y: mouseY - offset.y };
+                treeNodes[i].position = { x: mouseX - offset.x, y: mouseY - offset.y };
             }
-            newNodes.push(nodes[i]);
+            newNodes.push(treeNodes[i]);
         }
-        setNodes(newNodes);
+        setTreeNodes(newNodes);
     }
   };
 
