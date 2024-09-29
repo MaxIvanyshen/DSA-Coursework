@@ -62,23 +62,39 @@ export interface TreeNodeElement {
     node: TreeNode,
 }
 
-export function convert(head: TreeNode): TreeNode[] {
+export function convert(head: TreeNode, resetPosition?: boolean): TreeNode[] {
     const nodes: TreeNode[] = [];
-    
-    // Initialize starting coordinates and gaps
-    const rootX = 600;  // Start the root roughly in the middle of the canvas
-    const levelY = 100; // Start the root at this vertical position
-    const levelGapY = 100; // Vertical gap between levels
-    const minGapX = 50; // Minimum horizontal gap between sibling nodes
 
-    // Call the recursive function to calculate positions for all nodes
-    calculateNodePositions(head, rootX, levelY, levelGapY, minGapX);
+    if(resetPosition) {
+        // Initialize starting coordinates and gaps
+        const rootX = 600;  // Start the root roughly in the middle of the canvas
+        const levelY = 100; // Start the root at this vertical position
+        const levelGapY = 100; // Vertical gap between levels
+        const minGapX = 50; // Minimum horizontal gap between sibling nodes
+
+        // Call the recursive function to calculate positions for all nodes
+        calculateNodePositions(head, rootX, levelY, levelGapY, minGapX);
+    }
 
     // Collect nodes using level-order traversal (to return them in order)
     const q = new Queue<TreeNode>();
     q.enqueue(head);
     while (q.length != 0) {
         const curr = q.dequeue();
+        nodes.push(curr);
+        if (curr.left) q.enqueue(curr.left);
+        if (curr.right) q.enqueue(curr.right);
+    }
+    return nodes;
+}
+
+export function setInactive(head: TreeNode): TreeNode[] {
+    const nodes = [];
+    const q = new Queue<TreeNode>();
+    q.enqueue(head);
+    while (q.length != 0) {
+        const curr = q.dequeue();
+        curr.color = NodeStatus.INACTIVE;
         nodes.push(curr);
         if (curr.left) q.enqueue(curr.left);
         if (curr.right) q.enqueue(curr.right);

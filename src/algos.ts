@@ -1,5 +1,10 @@
+import { Queue } from "queue-typescript";
 import { convert, NodeStatus } from "./models/BinaryTree";
 import { TreeNode } from "./models/TreeNode";
+
+function sleep(ms: number): Promise<void> {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 export async function dfs(treeNodes: TreeNode[], setTreeNodes: (nodes: any[]) => void) {
     const curr = treeNodes[0];
@@ -14,12 +19,21 @@ export async function dfs(treeNodes: TreeNode[], setTreeNodes: (nodes: any[]) =>
         setTreeNodes(convert(treeNodes[0]));
         await sleep(700);
         el.color = NodeStatus.ACTIVE;
-        console.log(el.value);
         setTreeNodes(convert(treeNodes[0]));
     }
     await traverse(curr);
 }
 
-function sleep(ms: number): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
+export async function bfs(treeNodes: TreeNode[], setTreeNodes: (node: any[]) => void) {
+    const q = new Queue<TreeNode>();
+    q.enqueue(treeNodes[0]);
+    while(q.length !== 0) {
+        const curr = q.dequeue();
+        await sleep(700);
+        curr.color = NodeStatus.ACTIVE;
+        setTreeNodes(convert(treeNodes[0]));
+        if(curr.left) q.enqueue(curr.left);
+        if(curr.right) q.enqueue(curr.right);
+    }
 }
+

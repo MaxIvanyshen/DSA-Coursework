@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
-import { addNode, convert, TreeProps } from "./models/BinaryTree";
+import { addNode, convert, generateTree, setInactive, TreeProps } from "./models/BinaryTree";
 
 const MySwal = withReactContent(Swal);
 
@@ -40,11 +40,22 @@ const FormAlert: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
         }
       }
     });
+
   };
+
+  const reset = () => {
+      setTreeNodes(convert(generateTree(), true));
+  }
+
+  const deactivate = () => {
+      setTreeNodes(setInactive(treeNodes[0]));
+  }
 
   return (
     <div>
       <button onClick={showAlertWithForm}>Add Value</button>
+      <button onClick={deactivate}>Deactivate</button>
+      <button onClick={reset}>Reset</button>
     </div>
   );
 };
