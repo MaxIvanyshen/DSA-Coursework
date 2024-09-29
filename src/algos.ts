@@ -1,5 +1,5 @@
 import { Queue } from "queue-typescript";
-import { convert, NodeStatus } from "./models/BinaryTree";
+import { convert, NodeStatus, setInactive } from "./models/BinaryTree";
 import { TreeNode } from "./models/TreeNode";
 
 function sleep(ms: number): Promise<void> {
@@ -7,6 +7,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 export async function dfs(treeNodes: TreeNode[], setTreeNodes: (nodes: any[]) => void) {
+    setTreeNodes(setInactive(treeNodes[0]));
     const curr = treeNodes[0];
     const traverse = async (el: TreeNode | undefined) => {
         if(!el) {
@@ -25,6 +26,7 @@ export async function dfs(treeNodes: TreeNode[], setTreeNodes: (nodes: any[]) =>
 }
 
 export async function bfs(treeNodes: TreeNode[], setTreeNodes: (node: any[]) => void) {
+    setTreeNodes(setInactive(treeNodes[0]));
     const q = new Queue<TreeNode>();
     q.enqueue(treeNodes[0]);
     while(q.length !== 0) {

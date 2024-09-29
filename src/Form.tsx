@@ -36,7 +36,7 @@ const FormAlert: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
         );
         addNode(treeNodes[0], result.value)
         if(setTreeNodes) {
-            setTreeNodes(convert(treeNodes[0]));
+            setTreeNodes(convert(treeNodes[0], true));
         }
       }
     });
