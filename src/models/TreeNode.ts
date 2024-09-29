@@ -4,6 +4,7 @@ export class TreeNode {
     left?: TreeNode = undefined;
     right?: TreeNode = undefined;
     position: {x: number, y: number} = {x: 0, y: 0};
+    color: string = "black";
 
     constructor(value: number, 
                 left?: TreeNode | undefined, 

@@ -6,17 +6,20 @@ export interface TreeProps {
     setTreeNodes: (nodes: any[]) => void;
 }
 
+export enum NodeStatus {
+    INACTIVE = "black",
+    ACTIVE = "red",
+}
+
 export function generateTree(): TreeNode  {
-    const head = new TreeNode(3)
+    const head = new TreeNode(2)
 
     head.left = new TreeNode(1)
-    head.right = new TreeNode(2)
+    head.right = new TreeNode(3)
 
-    head.left.left = new TreeNode(4)
-    head.left.right = new TreeNode(5)
-
-    head.right.left = new TreeNode(4)
-    head.right.right = new TreeNode(5)
+    head.color = NodeStatus.INACTIVE;
+    head.left.color = NodeStatus.INACTIVE;
+    head.right.color = NodeStatus.INACTIVE;
 
     return head
 }
@@ -41,7 +44,6 @@ export function addNode(head: TreeNode, value: number) {
     }
 }
 
-
 export function calculateNodePositions(root: TreeNode | undefined, startX: number, levelY: number, levelGapY: number, minGapX: number): number {
     if (!root) return startX;
 
@@ -54,6 +56,10 @@ export function calculateNodePositions(root: TreeNode | undefined, startX: numbe
     root.position = { x: currentX, y: levelY };
 
     return rightX;
+}
+
+export interface TreeNodeElement {
+    node: TreeNode,
 }
 
 export function convert(head: TreeNode): TreeNode[] {
@@ -79,3 +85,5 @@ export function convert(head: TreeNode): TreeNode[] {
     }
     return nodes;
 }
+
+

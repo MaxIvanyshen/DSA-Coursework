@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect, MouseEvent } from "react";
 import { TreeProps } from "./models/BinaryTree";
 
-
 const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -10,7 +9,6 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const [scale, setScale] = useState<number>(1); // Scale factor
 
   useEffect(() => {
-      console.log("rendering");
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -26,34 +24,34 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
       ctx.scale(scale, scale); // Apply scale factor
 
       // Draw the circles
-      treeNodes.forEach((node) => {
-        if(node.right) {
+      treeNodes.forEach((el) => {
+        if(el.right) {
             ctx.beginPath();
-            ctx.moveTo(node.position.x, node.position.y)
-            ctx.lineTo(node.right.position.x, node.right.position.y);
-            ctx.strokeStyle = "black";
+            ctx.moveTo(el.position.x, el.position.y)
+            ctx.lineTo(el.right.position.x, el.right.position.y);
+            ctx.strokeStyle = el.color;
             ctx.lineWidth = 2;
             ctx.stroke();
         }
-        if(node.left) {
+        if(el.left) {
             ctx.beginPath();
-            ctx.moveTo(node.position.x, node.position.y)
-            ctx.lineTo(node.left.position.x, node.left.position.y);
-            ctx.strokeStyle = "black";
+            ctx.moveTo(el.position.x, el.position.y)
+            ctx.lineTo(el.left.position.x, el.left.position.y);
+            ctx.strokeStyle = el.color;
             ctx.lineWidth = 2;
             ctx.stroke();
         }
 
       });
-      treeNodes.forEach((node) => {
+      treeNodes.forEach((el) => {
           ctx.beginPath();
-          ctx.arc(node.position.x, node.position.y, 20, 0, 2 * Math.PI);
+          ctx.arc(el.position.x, el.position.y, 20, 0, 2 * Math.PI);
           ctx.fillStyle = "white";
           ctx.fill();
-          ctx.strokeStyle = "black";
+          ctx.strokeStyle = el.color;
           ctx.lineWidth = 1;
           ctx.stroke()
-          ctx.strokeText("" + node.value, node.position.x, node.position.y);
+          ctx.strokeText("" + el.value, el.position.x, el.position.y);
           ctx.textAlign = 'center';
       });
 

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import AlgoBar from './AlgoBar';
 import './App.css';
 import Canvas from './Canvas';
 import Form from './Form';
@@ -10,6 +11,7 @@ function App() {
     return (
         <div>
             <Form treeNodes={nodes} setTreeNodes={setNodes}/> 
+            <AlgoBar treeNodes={nodes} setTreeNodes={setNodes}/>
             <Canvas treeNodes={nodes} setTreeNodes={setNodes}/>
         </div>
     );
