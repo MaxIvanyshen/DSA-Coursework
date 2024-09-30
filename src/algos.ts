@@ -39,3 +39,30 @@ export async function bfs(treeNodes: TreeNode[], setTreeNodes: (node: any[]) => 
     }
 }
 
+export async function binarySearch(
+    treeNodes: TreeNode[],
+    setTreeNodes: (node: any[]) => void,
+    value: number | undefined,
+) {
+    if(!value) {
+        return;
+    }
+    const traverse = async(node: TreeNode | undefined): Promise<boolean> => {
+        await sleep(700);
+        if(!node) return false;
+        setTreeNodes(setInactive(treeNodes[0]));
+        node.color = NodeStatus.ACTIVE;
+        setTreeNodes(convert(treeNodes[0]));
+        if(value < node.value) {
+            return await traverse(node.left);
+        }
+        else if(value > node.value) {
+            return await traverse(node.right);
+        }
+        return true;
+    }
+    const found = await traverse(treeNodes[0]);
+    if(!found) {
+        setTreeNodes(setInactive(treeNodes[0]));
+    }
+}
