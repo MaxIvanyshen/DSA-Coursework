@@ -79,7 +79,7 @@ export function convert(head: TreeNode, resetPosition?: boolean): TreeNode[] {
     // Collect nodes using level-order traversal (to return them in order)
     const q = new Queue<TreeNode>();
     q.enqueue(head);
-    while (q.length != 0) {
+    while (q.length !== 0) {
         const curr = q.dequeue();
         nodes.push(curr);
         if (curr.left) q.enqueue(curr.left);
@@ -92,7 +92,7 @@ export function setInactive(head: TreeNode): TreeNode[] {
     const nodes = [];
     const q = new Queue<TreeNode>();
     q.enqueue(head);
-    while (q.length != 0) {
+    while (q.length !== 0) {
         const curr = q.dequeue();
         curr.color = NodeStatus.INACTIVE;
         nodes.push(curr);
@@ -102,4 +102,21 @@ export function setInactive(head: TreeNode): TreeNode[] {
     return nodes;
 }
 
+export function convertArrayToTree(arr: number[]): TreeNode | undefined {
+    arr.sort((a: number, b: number) => a - b);
 
+    console.log(arr);
+
+    const buildTree = (l: number, r: number): TreeNode | undefined => {
+        if(l > r) {
+            return undefined;
+        }
+        let m = Math.floor((l + r) / 2);
+        const root = new TreeNode(arr[m]);
+        root.left = buildTree(l, m - 1);
+        root.right = buildTree(m + 1, r);
+        return root;
+    }
+
+    return buildTree(0, arr.length - 1);
+}
