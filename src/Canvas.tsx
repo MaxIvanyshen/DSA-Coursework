@@ -29,7 +29,7 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
             ctx.beginPath();
             ctx.moveTo(el.position.x, el.position.y)
             ctx.lineTo(el.right.position.x, el.right.position.y);
-            ctx.strokeStyle = el.color;
+            ctx.strokeStyle = "black";
             ctx.lineWidth = 2;
             ctx.stroke();
         }
@@ -37,7 +37,7 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
             ctx.beginPath();
             ctx.moveTo(el.position.x, el.position.y)
             ctx.lineTo(el.left.position.x, el.left.position.y);
-            ctx.strokeStyle = el.color;
+            ctx.strokeStyle = "black";
             ctx.lineWidth = 2;
             ctx.stroke();
         }

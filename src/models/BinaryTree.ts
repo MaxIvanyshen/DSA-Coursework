@@ -105,8 +105,6 @@ export function setInactive(head: TreeNode): TreeNode[] {
 export function convertArrayToTree(arr: number[]): TreeNode | undefined {
     arr.sort((a: number, b: number) => a - b);
 
-    console.log(arr);
-
     const buildTree = (l: number, r: number): TreeNode | undefined => {
         if(l > r) {
             return undefined;
