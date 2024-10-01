@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect, MouseEvent } from "react";
-import { TreeProps } from "./models/BinaryTree";
+import { NodeStatus, TreeProps } from "./models/BinaryTree";
 
 const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -29,7 +29,11 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
             ctx.beginPath();
             ctx.moveTo(el.position.x, el.position.y)
             ctx.lineTo(el.right.position.x, el.right.position.y);
-            ctx.strokeStyle = "black";
+            if(el.color === el.right.color && el.color === NodeStatus.ACTIVE) {
+                ctx.strokeStyle = NodeStatus.ACTIVE;
+            } else {
+                ctx.strokeStyle = NodeStatus.INACTIVE;
+            }
             ctx.lineWidth = 2;
             ctx.stroke();
         }
@@ -37,7 +41,11 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
             ctx.beginPath();
             ctx.moveTo(el.position.x, el.position.y)
             ctx.lineTo(el.left.position.x, el.left.position.y);
-            ctx.strokeStyle = "black";
+            if(el.color === el.left.color && el.color === NodeStatus.ACTIVE) {
+                ctx.strokeStyle = NodeStatus.ACTIVE;
+            } else {
+                ctx.strokeStyle = NodeStatus.INACTIVE;
+            }
             ctx.lineWidth = 2;
             ctx.stroke();
         }
