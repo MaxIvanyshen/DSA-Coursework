@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import Canvas from './Canvas';
-import Form from './Form';
+import Header from './Header';
 import { convert, generateTree } from './models/BinaryTree';
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
     const [nodes, setNodes] = useState(convert(tree, true));
     return (
         <div>
-            <Form treeNodes={nodes} setTreeNodes={setNodes}/> 
+            <Header treeNodes={nodes} setTreeNodes={setNodes}/> 
             <Canvas treeNodes={nodes} setTreeNodes={setNodes}/>
         </div>
     );

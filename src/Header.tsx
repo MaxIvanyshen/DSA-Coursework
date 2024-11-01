@@ -11,7 +11,7 @@ import { addNode, convert, convertArrayToTree, generateTree, setInactive, TreePr
 
 const MySwal = withReactContent(Swal);
 
-const FormAlert: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
+const Header: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const [nodeValue, setNodeValue] = useState<number>(0);
   const [arrStr, setArrStr] = useState<string>("");
 
@@ -152,4 +152,4 @@ const FormAlert: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   );
 };
 
-export default FormAlert;
+export default Header;
