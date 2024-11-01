@@ -47,11 +47,9 @@ export function addNode(head: TreeNode, value: number) {
 export function calculateNodePositions(root: TreeNode | undefined, startX: number, levelY: number, levelGapY: number, minGapX: number): number {
     if (!root) return startX;
 
-    // Calculate the position for the left and right children recursively
     const leftX = calculateNodePositions(root.left, startX, levelY + levelGapY, levelGapY, minGapX);
     const rightX = calculateNodePositions(root.right, leftX + minGapX, levelY + levelGapY, levelGapY, minGapX);
 
-    // Set the current node's position (mid-point between the left and right children)
     const currentX = (leftX + rightX) / 2;
     root.position = { x: currentX, y: levelY };
 
@@ -66,17 +64,14 @@ export function convert(head: TreeNode, resetPosition?: boolean): TreeNode[] {
     const nodes: TreeNode[] = [];
 
     if(resetPosition) {
-        // Initialize starting coordinates and gaps
-        const rootX = 600;  // Start the root roughly in the middle of the canvas
-        const levelY = 100; // Start the root at this vertical position
-        const levelGapY = 100; // Vertical gap between levels
-        const minGapX = 50; // Minimum horizontal gap between sibling nodes
+        const rootX = 200;
+        const levelY = 100; 
+        const levelGapY = 100; 
+        const minGapX = 50; 
 
-        // Call the recursive function to calculate positions for all nodes
         calculateNodePositions(head, rootX, levelY, levelGapY, minGapX);
     }
 
-    // Collect nodes using level-order traversal (to return them in order)
     const q = new Queue<TreeNode>();
     q.enqueue(head);
     while (q.length !== 0) {

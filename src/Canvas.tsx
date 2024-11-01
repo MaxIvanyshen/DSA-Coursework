@@ -4,9 +4,9 @@ import { NodeStatus, TreeProps } from "./models/BinaryTree";
 const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [isDragging, setIsDragging] = useState<boolean>(false);
-  const [draggingCircle, setDraggingCircle] = useState<number | null>(null); // Track which circle is being dragged
+  const [draggingCircle, setDraggingCircle] = useState<number | null>(null);
   const [offset, setOffset] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
-  const [scale, setScale] = useState<number>(1); // Scale factor
+  const [scale, setScale] = useState<number>(1); 
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -19,11 +19,10 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
     if (!ctx) return;
 
     const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-      ctx.save(); // Save the current state
-      ctx.scale(scale, scale); // Apply scale factor
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.save(); 
+      ctx.scale(scale, scale);
 
-      // Draw the circles
       treeNodes.forEach((el) => {
         if(el.right) {
             ctx.beginPath();
@@ -58,76 +57,71 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
           ctx.fill();
           ctx.strokeStyle = el.color;
           ctx.lineWidth = 1;
-          ctx.stroke()
-          ctx.strokeText("" + el.value, el.position.x, el.position.y);
+          ctx.stroke();
+
           ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          ctx.strokeText("" + el.value, el.position.x, el.position.y);
       });
 
-      ctx.restore(); // Restore the original state (without scaling)
+      ctx.restore();
     };
 
     draw();
-  }, [treeNodes, scale]); // Re-render whenever positions or scale changesp
+  }, [treeNodes, scale]);
 
-  // Handle mouse down event to start dragging a circle
   const handleMouseDown = (e: MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const mouseX = (e.clientX - rect.left) / scale; // Adjust for scaling
-    const mouseY = (e.clientY - rect.top) / scale;  // Adjust for scaling
+    const mouseX = (e.clientX - rect.left) / scale;
+    const mouseY = (e.clientY - rect.top) / scale;
 
-    // Check if the click is inside any of the circles
     for (let i = 0; i < treeNodes.length; i++) {
       const { x, y } = treeNodes[i].position;
       const distance = Math.sqrt((mouseX - x) ** 2 + (mouseY - y) ** 2);
       if (distance < 20) {
         setIsDragging(true);
-        setDraggingCircle(i); // Mark which circle is being dragged
+        setDraggingCircle(i); 
         setOffset({ x: mouseX - x, y: mouseY - y });
         return;
       }
     }
   };
 
-  // Handle mouse move event to move a circle
   const handleMouseMove = (e: MouseEvent<HTMLCanvasElement>) => {
     if (isDragging && draggingCircle !== null) {
       const canvas = canvasRef.current;
       if (!canvas) return;
 
       const rect = canvas.getBoundingClientRect();
-      const mouseX = (e.clientX - rect.left) / scale; // Adjust for scaling
-      const mouseY = (e.clientY - rect.top) / scale;  // Adjust for scaling
+      const mouseX = (e.clientX - rect.left) / scale;
+      const mouseY = (e.clientY - rect.top) / scale;
 
-      // Update the position of the dragged circle
-        let newNodes = [];
-        for(let i = 0; i < treeNodes.length; i++) {
-            if(draggingCircle == i) {
-                treeNodes[i].position = { x: mouseX - offset.x, y: mouseY - offset.y };
-            }
-            newNodes.push(treeNodes[i]);
-        }
-        setTreeNodes(newNodes);
+      let newNodes = [];
+      for(let i = 0; i < treeNodes.length; i++) {
+          if(draggingCircle === i) {
+              treeNodes[i].position = { x: mouseX - offset.x, y: mouseY - offset.y };
+          }
+          newNodes.push(treeNodes[i]);
+      }
+      setTreeNodes(newNodes);
     }
   };
 
-  // Handle mouse up event to stop dragging
   const handleMouseUp = () => {
     setIsDragging(false);
-    setDraggingCircle(null); // Stop dragging the circle
+    setDraggingCircle(null);
   };
 
-  // Handle mouse wheel event for scaling (Ctrl + Wheel)
   const handleWheel = (e: WheelEvent) => {
     if (e.ctrlKey) {
-      e.preventDefault(); // Prevent the default zoom behavior
+      e.preventDefault();
 
-      // Adjust the scale based on the wheel direction
       const deltaScale = e.deltaY > 0 ? -0.1 : 0.1;
 
-      // Update scale within a reasonable range (e.g., between 0.5 and 3)
       setScale((prevScale) => Math.min(Math.max(prevScale + deltaScale, 0.5), 3));
     }
   };
@@ -135,12 +129,10 @@ const Canvas: React.FC<TreeProps> = ({treeNodes, setTreeNodes}) => {
   useEffect(() => {
     const canvas = canvasRef.current;
 
-    // Attach wheel event listener for scaling
     if (canvas) {
       canvas.addEventListener("wheel", handleWheel);
     }
 
-    // Cleanup event listener on component unmount
     return () => {
       if (canvas) {
         canvas.removeEventListener("wheel", handleWheel);
